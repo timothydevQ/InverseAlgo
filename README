@@ -7,7 +7,7 @@ The computational framework is divided into three sequential Python scripts. It 
 Because patient-specific clinical imaging yields arbitrary spatial orientations, this script is used to manually locate the precise coordinates of the target structural defect (the aneurysm dome) prior to running the forward simulation.
 
 **Usage:**
-1. Update the file path in `analyze_mesh.py` to point to your arbitrary `.vtp` file.
+1. Update the file path in `analyze_mesh.py` to point to your `.vtp` file.
 2. Run the script. A 3D interactive render window will open.
 3. Left-click the apex of the aneurysm dome.
 4. The terminal will print the exact 3D Cartesian coordinates of the picked point (e.g., `Picked point: [x, y, z]`). Copy this array.
