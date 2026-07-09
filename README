@@ -41,4 +41,4 @@ Ensure your Python environment has the following primary packages installed:
 * `pyvista` (for `.vtp` mesh rendering, picking, and visualization)
 
 ## Contact & Citation
-If you utilize this inverse FSI framework or the synthetic data generation pipeline in your research, please refer to the primary manuscript for the rigorous mathematical proofs regarding local convexity, Lipschitz continuity, and structural homogenization limits.
+If you utilize this inverse FSI framework or the synthetic data generation pipeline in your research, please refer to the primary manuscript for the proofs regarding local convexity, Lipschitz continuity, and structural homogenization limits.
