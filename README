@@ -1,0 +1,49 @@
+# An Inverse Stochastic Framework for Estimating Patient-Specific Arterial Wall Stiffness
+
+#This repository contains the core Python computational pipeline utilized for the non-invasive spatial reconstruction of intracranial arterial wall stiffness. By coupling Fluid-Structure Interaction (FSI) simulations with synthetic 4D-Flow MRI kinematics, this framework formulates aneurysm wall degradation as an ill-posed inverse optimization problem.
+
+#The pipeline utilizes an adjoint-based L-BFGS-B optimization algorithm to map fluid-induced luminal displacements to localized material properties, specifically the spatially varying Young's modulus, $E(X)$.
+
+## Pipeline Overview
+
+The computational framework is divided into three sequential Python scripts. It is designed to accept any unstructured surface manifold or volumetric mesh in the VTK Polygonal Data format (`.vtp`).
+
+### 1. Mesh Analysis and Coordinate Extraction (`analyze_mesh.py`)
+Because patient-specific clinical imaging yields arbitrary spatial orientations, this script is used to manually locate the precise coordinates of the target structural defect (the aneurysm dome) prior to running the forward simulation.
+
+**Usage:**
+1. Update the file path in `analyze_mesh.py` to point to your arbitrary `.vtp` file.
+2. Run the script. A 3D interactive render window will open.
+3. Left-click the apex of the aneurysm dome.
+4. The terminal will print the exact 3D Cartesian coordinates of the picked point (e.g., `Picked point: [x, y, z]`). Copy this array.
+
+### 2. Forward FSI and Synthetic Data Generation (`generate_data.py`)
+This script serves as the "Gold Standard" environment. It maps a localized structural defect to the mesh, calculates the forward elastodynamic kinematics, and degrades the data to simulate clinical acquisition limits.
+
+**Usage:**
+1. Open `generate_data.py` and paste the `[x, y, z]` coordinates extracted from Step 1 into the target apex variable (e.g., $X_c$).
+2. Set the baseline ambient tissue stiffness ($E_{\text{base}}$) and the pathological defect stiffness ($E_{\text{weak}}$).
+3. Run the script. 
+4. The algorithm will mathematically construct a continuous Gaussian structural defect centered at $X_c$.
+5. It will calculate the localized boundary deformations ($\mathbf{d}_{\text{sim}}$) under a specified systolic pressure load.
+6. To mirror clinical 4D-Flow MRI resolution, the script applies an additive Gaussian white noise operator to the displacement field, exporting a discrete, noise-corrupted synthetic observation dataset ($\mathbf{d}_{\text{exp}}$).
+
+### 3. Inverse Parameter Reconstruction (`inverse_solver.py`)
+This script represents the clinical diagnostic pipeline. It ingests the noisy kinematic observation data and attempts to reconstruct the hidden stiffness field $E(X)$ completely blindly.
+
+**Usage:**
+1. Ensure the output from Step 2 is correctly linked as the input for this script.
+2. Run `inverse_solver.py`.
+3. The script initializes a homogeneous baseline stiffness field.
+4. It utilizes a Tikhonov-regularized cost functional to track the kinematic residual between the forward solver and the noisy observational data.
+5. The exact analytical gradient is computed via the continuous adjoint state method, feeding an L-BFGS-B gradient descent loop.
+6. The loop iterates until the optimization algorithm converges at the stochastic noise floor, successfully localizing the compliance defect.
+
+## Dependencies
+Ensure your Python environment has the following primary packages installed:
+* `numpy`
+* `scipy`
+* `pyvista` (for `.vtp` mesh rendering, picking, and visualization)
+
+## Contact & Citation
+If you utilize this inverse FSI framework or the synthetic data generation pipeline in your research, please refer to the primary manuscript for the rigorous mathematical proofs regarding local convexity, Lipschitz continuity, and structural homogenization limits.
