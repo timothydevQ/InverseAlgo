@@ -1,8 +1,3 @@
-# An Inverse Stochastic Framework for Estimating Patient-Specific Arterial Wall Stiffness
-
-#This repository contains the core Python computational pipeline utilized for the non-invasive spatial reconstruction of intracranial arterial wall stiffness. By coupling Fluid-Structure Interaction (FSI) simulations with synthetic 4D-Flow MRI kinematics, this framework formulates aneurysm wall degradation as an ill-posed inverse optimization problem.
-
-#The pipeline utilizes an adjoint-based L-BFGS-B optimization algorithm to map fluid-induced luminal displacements to localized material properties, specifically the spatially varying Young's modulus, $E(X)$.
 
 ## Pipeline Overview
 
